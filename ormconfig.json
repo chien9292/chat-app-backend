@@ -1,0 +1,21 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "password",
+  "database": "fcord-backend",
+  "logging": true,
+  "autoLoadEntities": true,
+  "synchronize": true,
+  "entities": [
+    "/home/spacepotato/Documents/chat-app-backend/src/entities/*.entity{.ts,.js}"
+  ],
+  "migrations": [
+    "/home/spacepotato/Documents/chat-app-backend/src/migrations/*{.ts,.js}"
+  ],
+  "cli": {
+    "migrationsDir": "src/migrations"
+  },
+  "ssl": false
+}

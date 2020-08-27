@@ -1,8 +1,8 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
-import { GroupEntity } from 'src/entities/group.entity';
+import { GroupEntity } from '../../entities/group.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from 'src/entities/user.entity';
+import { UserEntity } from '../../entities/user.entity';
 
 @Injectable()
 export class GroupsFavoritesService {
