@@ -1,0 +1,25 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/chat-app-backend', '.',
+    '--build-arg', 'PORT=${_PORT}',
+    '--build-arg', 'FRONT_END_URL=${_FRONT_END_URL}',
+    '--build-arg', 'JWT_SECRET=${_JWT_SECRET}',
+    '--build-arg', 'DB_USERNAME=${_DB_USERNAME}',
+    '--build-arg', 'DB_PASSWORD=${_DB_PASSWORD}',
+    '--build-arg', 'DB_DATABASENAME=${_DB_DATABASENAME}',
+    '--build-arg', 'DB_HOSTNAME=${_DB_HOSTNAME}',
+    '--build-arg', 'DB_PORT=${_DB_PORT}',
+    '--build-arg', 'MODE=${_MODE}',
+  ]
+  env:
+  - 'PORT=${_PORT}'
+  - 'FRONT_END_URL=${_FRONT_END_URL}'
+  - 'JWT_SECRET=${_JWT_SECRET}'
+  - 'DB_USERNAME=${_DB_USERNAME}'
+  - 'DB_PASSWORD=${_DB_PASSWORD}'
+  - 'DB_DATABASENAME=${_DB_DATABASENAME}'
+  - 'DB_HOSTNAME=${_DB_HOSTNAME}'
+  - 'DB_PORT=${_DB_PORT}'
+  - 'MODE=${_MODE}'
+images:
+- 'gcr.io/$PROJECT_ID/chat-app-backend'
