@@ -1,11 +1,11 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GroupEntity } from 'src/entities/group.entity';
+import { GroupEntity } from '../../entities/group.entity';
 import { Repository, DeleteResult, Like } from 'typeorm';
 import { GroupDTO } from './group.dto';
-import { ILike } from 'src/helpers/ilike.operator';
+import { ILike } from '../../helpers/ilike.operator';
 import { GroupMembersService } from './group-members/group-members.service';
-import { GroupTypes } from 'src/constants/constant';
+import { GroupTypes } from '../../constants/constant';
 
 @Injectable()
 export class GroupsService {

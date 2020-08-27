@@ -1,5 +1,5 @@
 import { Controller, UseGuards, Get, Request, Param, Post, Delete } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../modules/auth/guards/jwt-auth.guard';
 import { GroupMembersService } from './group-members.service';
 
 @Controller()

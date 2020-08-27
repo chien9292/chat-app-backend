@@ -8,7 +8,7 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @CreateDateColumn() 
+  @CreateDateColumn()
   createdDate: Date;
 
   @Column({
@@ -28,7 +28,7 @@ export class UserEntity {
     nullable: true,
   })
   avatar: string;
-  
+
   @Column({ default: true })
   isActive: boolean;
 
@@ -46,10 +46,12 @@ export class UserEntity {
   @JoinColumn({ name: "roleId" })
   role: RoleEntity;
 
-  @BeforeInsert()  async hashPasswordCreate() {
-    this.password = await bcrypt.hash(this.password, 10);  
+  @BeforeInsert() async hashPasswordCreate() {
+    this.password = await bcrypt.hash(this.password, 10);
   }
   @BeforeUpdate() async hashPasswordUpdate() {
-    this.password = await bcrypt.hash(this.password, 10);  
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 }

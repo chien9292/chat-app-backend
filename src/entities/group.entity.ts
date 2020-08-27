@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { GroupTypes } from 'src/constants/constant';
+import { GroupTypes } from '../constants/constant';
 
 @Entity('group')
 export class GroupEntity {
