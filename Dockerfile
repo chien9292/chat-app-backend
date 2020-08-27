@@ -5,7 +5,7 @@ COPY tsconfig.build.json ./
 COPY package.json ./
 RUN npm install 
 COPY src ./src
-COPY .env ./
+RUN ls
 RUN npm run build
 FROM build as runner
 WORKDIR /app
