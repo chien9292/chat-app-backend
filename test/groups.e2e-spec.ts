@@ -8,7 +8,8 @@ import { UserEntity } from '../src/entities/user.entity';
 
 const userEmail = 'testgroup@gmail.com';
 const password = 'testpassword';
-const groupName = 'testGroupName';
+const groupName = 'Test Group Name';
+const updatedGroupName = "Test Updated Group Name";
 
 describe('Group', () => {
   let app: INestApplication;
@@ -27,7 +28,7 @@ describe('Group', () => {
   });
 
   afterAll(async () => {
-    await repository.query(`DELETE FROM chat_app.group WHERE (name = '${groupName}')`);
+    await repository.query(`DELETE FROM chat_app.group WHERE (name = '${updatedGroupName}')`);
     await repository.query(`DELETE FROM chat_app.user WHERE (email = '${userEmail}')`);
     await app.close();
   });
@@ -55,19 +56,40 @@ describe('Group', () => {
           type: 1
         });
     });
-    it('should return an array of groups', async () => {
-      var result = await repository.findAndCount();
-      console.log(`================================== Group: ${result}`)
+    it('should return group(s) that the member is in', async () => {
+      const user = await userRepository.findOne({ email: userEmail })
+      var result = await repository.find({creatorId:user.id});
       const parsedData = JSON.stringify(result);
       const groupList = JSON.parse(parsedData);
-      console.log(`================================== Parsed Groups: ${groupList}`)
-      expect(result).toMatchObject({
+      groupList.forEach(group => {
+        expect(group).toMatchObject({
+          createdDate: expect.any(String),
+          creatorId: expect.any(String),
+          id: expect.any(String),
+          isActive: expect.any(Boolean),
+          name: expect.any(String),
+          type: expect.any(Number),
+        });
+      });
+    });
+    it('should update a group and verify it in the DB', async () => {
+      var group = await repository.findOne({ name: groupName })
+      await repository.update(group.id,{name:updatedGroupName});
+      group = await repository.findOne({ name: updatedGroupName })
+      expect(group).toMatchObject({
         createdDate: expect.any(Date),
         creatorId: expect.any(String),
         id: expect.any(String),
-        isActive: true,
+        isActive: expect.any(Boolean),
         name: expect.any(String),
         type: expect.any(Number),
+      });
+    });
+    it('should delete a group', async () => {
+      const result = await repository.delete({ name: updatedGroupName })
+      expect(result.raw).toMatchObject({
+        affectedRows: 1,
+        serverStatus: 2,
       });
     });
   });
