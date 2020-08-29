@@ -55,5 +55,20 @@ describe('Group', () => {
           type: 1
         });
     });
+    it('should return an array of groups', async () => {
+      var result = await repository.findAndCount();
+      console.log(`================================== Group: ${result}`)
+      const parsedData = JSON.stringify(result);
+      const groupList = JSON.parse(parsedData);
+      console.log(`================================== Parsed Groups: ${groupList}`)
+      expect(result).toMatchObject({
+        createdDate: expect.any(Date),
+        creatorId: expect.any(String),
+        id: expect.any(String),
+        isActive: true,
+        name: expect.any(String),
+        type: expect.any(Number),
+      });
+    });
   });
 });
