@@ -4,7 +4,8 @@ import * as supertest from 'supertest';
 import { Repository } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { UserEntity } from '../src/entities/user.entity';
-
+const userEmail = 'testemail@gmail.com';
+const password = 'testpassword';
 
 describe('User', () => {
   let app: INestApplication;
@@ -21,49 +22,47 @@ describe('User', () => {
   });
 
   afterAll(async () => {
-    await repository.query(`DELETE FROM user;`);
+    await repository.query(`DELETE FROM chat_app.user WHERE (email = '${userEmail}')`);
     await app.close();
   });
-  const userEmail = 'binh@gmail.com';
-  const password = '123123';
+
   describe('CRUD User', () => {
     it('should create a user in the DB', async () => {
       await supertest(app.getHttpServer())
         .post('/users')
         .send({ email: userEmail, password })
         .expect(201);
-      await expect(repository.findAndCount()).resolves.toEqual([
-        [{
-          avatar: null,
-          fullname: null,
-          createdDate: expect.any(Date),
-          id: expect.any(String),
-          isActive: true,
-          password: expect.any(String),
-          roleId: 2,
-          email: userEmail
-
-        }],
-        1,
-      ]);
+      const user = await repository.findOne({ email: userEmail })
+      const { body } = await supertest(app.getHttpServer())
+        .get('/users/' + user.id)
+        .expect(200);
+      expect(body.data).toEqual({
+        avatar: null,
+        createdDate: expect.any(String),
+        email: expect.any(String),
+        fullname: null,
+        id: expect.any(String),
+        isActive: true,
+        password: expect.any(String),
+        roleId: 2,
+      });
     });
     it('should return an array of users', async () => {
       const { body } = await supertest(app.getHttpServer())
-        .get('/users')
+        .get('/users/')
         .expect(200);
-      expect(body.data).toEqual([
-        {
-          avatar: null,
-          fullname: null,
+      const parsedData = JSON.stringify(body.data);
+      const userList = JSON.parse(parsedData);
+      userList.forEach(user => {
+        expect(user).toMatchObject({
           createdDate: expect.any(String),
+          email: expect.any(String),
           id: expect.any(String),
           isActive: true,
           password: expect.any(String),
           roleId: 2,
-          email: userEmail
-
-        }
-      ]);
+        });
+      });
     });
     it('should update a user and verify it in the DB', async () => {
       const user = await repository.findOne({ email: userEmail })
@@ -80,8 +79,6 @@ describe('User', () => {
       const { body } = await supertest(app.getHttpServer())
         .get(`/users/${user.id}`)
         .expect(200);
-      console.log(body);
-
       expect(body.data).toEqual(
         {
           avatar: updatedAvatar,
